@@ -5,46 +5,20 @@ import os, glob
 import os.path
 import datetime
 import json
+import pandas as pd
 from shutil import copyfile
 
+targetPath = '/home/meulindux/emails/target'
+workingPath = '/home/meulindux/emails/working'
 
 def loopPrincipal(filesToOpen):
     listOfFilesToOpen = filesToOpen
     remetentesExtraido = []
 
     for email in listOfFilesToOpen:
-        remetentesExtraido.append(extraiRemetente(email))
+        remetentesExtraido.append(extraiRemetente(email)) #extraiRemetente(email) para remover direto do cabeçalho 
             
     return remetentesExtraido
-
-# def writeEmailsToCSV(toExtracted):
-#     emailsExtraidos = toExtracted
-#     with open('emails-bounced-extraidos.csv', 'a') as f:
-#         f.write(',\n'.join(emailsExtraidos))
-
-
-
-# filesToOpen = getAllTheNames()
-# print("*************************")
-# print("ARQUIVOS QUE SERÃO USADOS:")
-# print(f"Total: {len(filesToOpen)}")
-# print("*************************")
-# print(filesToOpen)
-# toExtracted =  toExtractor(filesToOpen)
-
-
-# print("*************************")
-# print("EMAILS SENDO SALVOS EM ARQUIVO:")
-# print("*************************")
-# print(toExtracted)
-
-# writeEmailsToCSV(toExtracted)
-# print("*************************")
-# print(f"ARQUIVO SALVO COMO: emails-bounced-extraidos.csv")
-# print("*************************")
-
-targetPath = '/home/meulindux/emails/target'
-workingPath = '/home/meulindux/emails/working'
 
 def copiaEmails():
     index = 1
@@ -72,11 +46,15 @@ def extraiRemetente(eml):
         print('Não achei o remetente')
         print('*********************')
 
+
 def getAllTheEmails ():
     allEmails = []
 
     for file in os.listdir(workingPath):
-        allEmails.append(file)
+        if "OECustom" in file:
+            pass
+        else:    
+            allEmails.append(file)
 
     return allEmails
 
@@ -89,3 +67,6 @@ todosOsEmailsExtraidos = loopPrincipal(emails)
 print(todosOsEmailsExtraidos)
 
 print(len(todosOsEmailsExtraidos))
+
+df = pd.DataFrame(todosOsEmailsExtraidos)
+df.to_csv('Resultado.csv')
